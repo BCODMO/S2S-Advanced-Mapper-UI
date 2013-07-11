@@ -1,0 +1,431 @@
+@prefix :        <http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#> .
+@prefix dc:      <http://purl.org/dc/terms/> .
+@prefix s2s:     <http://escience.rpi.edu/ontology/sesf/s2s/4/0/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix core:    <http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/> .
+@prefix facet:   <http://danielsmith.eu/resources/facet/#> .
+@prefix foe:     <http://danielsmith.eu/resources/facet/#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix skos:	 <http://www.w3.org/2004/02/skos/core#> .
+@prefix bcodmo:  <http://escience.rpi.edu/ontology/BCO-DMO/bcodmo/3/0/> .
+@prefix tw:      <http://tw.rpi.edu/schema/> .
+
+<http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl>
+    dc:creator "Eric Rozell"^^xsd:string ;
+    a owl:Ontology ;
+    rdfs:comment "An ontology describing the metadata for the BCO-DMO S2S service."^^xsd:string ;
+    owl:imports <http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/> ;
+    owl:versionInfo "1.0"^^xsd:string .
+
+:SearchService
+    core:hasOpenSearchDescriptionDocument "http://lod.bco-dmo.org/s2s/opensearch/opensearch.xml"^^xsd:anyURI ;
+    a core:OpenSearchService, owl:Thing ;
+    rdfs:comment "A search service for the Biological and Chemical Oceanographic Data Management Office (BCO-DMO) at Woods Hole Oceanographic Institution.  BCO-DMO manages a metadata database for oceanographic datasets, including those curated for the JGOFS and GLOBEC projects."^^xsd:string ;
+    rdfs:label "BCO-DMO Search Service"^^xsd:string ;
+    rdfs:seeAlso "http://www.bco-dmo.org"^^xsd:anyURI .
+
+:Awards
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected award numbers."^^xsd:string ;
+    rdfs:label "Awards"^^xsd:string .
+
+:AwardsQuery
+    s2s:forInput :Awards ;
+    s2s:hasOutput core:LabelIdContextCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:BcoDmoMapperQuery
+    s2s:hasOutput :DeploymentDatasetJsonArray ;
+    a s2s:SearchResultsInterface, owl:Thing ;
+    rdfs:comment "A query interface that returns JSON with information about available deployments and datasets."^^xsd:string ;
+    rdfs:label "BCO-DMO Mapper Query"^^xsd:string .
+
+:DeploymentDatasetJsonArray
+    a s2s:Output, owl:Thing ;
+    rdfs:comment "An output format for a JSON array containing JSON objects with at least two members, \"deployment\" and \"dataset\"."^^xsd:string .
+
+:Deployments
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected deployments."^^xsd:string ;
+    rdfs:label "Deployments"^^xsd:string .
+
+:DeploymentsQuery
+    s2s:forInput :Deployments ;
+    s2s:hasOutput core:LabelIdContextCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:InstrumentCategories
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected SeaVoX instrument categories."^^xsd:string ;
+    rdfs:label "Instrument Categories"^^xsd:string .
+
+:InstrumentCategoriesQuery
+    s2s:forInput :InstrumentCategories ;
+    s2s:hasOutput core:LabelIdCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:Instruments
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected instruments."^^xsd:string ;
+    rdfs:label "Instruments"^^xsd:string .
+
+:InstrumentsQuery
+    s2s:forInput :Instruments ;
+    s2s:hasOutput core:LabelIdContextCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:ParameterCategories
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected SeaVoX parameter categories."^^xsd:string ;
+    rdfs:label "Parameter Categories"^^xsd:string .
+
+:ParameterCategoriesQuery
+    s2s:forInput :ParameterCategories ;
+    s2s:hasOutput core:LabelIdCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:Parameters
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected oceanographic parameters."^^xsd:string ;
+    rdfs:label "Parameters"^^xsd:string .
+
+:ParametersQuery
+    s2s:forInput :Parameters ;
+    s2s:hasOutput core:LabelIdContextCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:People
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected people."^^xsd:string ;
+    rdfs:label "People"^^xsd:string .
+
+:PeopleQuery
+    s2s:forInput :People ;
+    s2s:hasOutput core:LabelIdContextCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:Platforms
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected platforms."^^xsd:string ;
+    rdfs:label "Platforms"^^xsd:string .
+
+:PlatformsQuery
+    s2s:forInput :Platforms ;
+    s2s:hasOutput core:LabelIdCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:Programs
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected programs."^^xsd:string ;
+    rdfs:label "Programs"^^xsd:string .
+
+:ProgramsQuery
+    s2s:forInput :Programs ;
+    s2s:hasOutput core:LabelIdContextCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:Projects
+    core:hasDelimiter ";"^^xsd:string ;
+    a s2s:Input, owl:Thing ;
+    rdfs:comment "A search parameter for data related to any selected projects."^^xsd:string ;
+    rdfs:label "Projects"^^xsd:string .
+
+:ProjectsQuery
+    s2s:forInput :Projects ;
+    s2s:hasOutput core:LabelIdContextCountJsonArray ;
+    a s2s:InputValuesInterface, owl:Thing .
+
+:FacetOntologyService a core:FacetOntologyService ;
+	rdfs:comment "A service for BCO-DMO based on an RDF description of facets."^^xsd:string ;
+	rdfs:label "BCO-DMO Facet Ontology Service"^^xsd:string ;
+	core:hasFacetCollection :FacetCollection ;
+	core:hasDefaultConfiguration "http://lod.bco-dmo.org/s2s/config.xml"^^xsd:anyURI ;
+	core:hasDataSource :DataSource .
+
+:DataSource a core:SparqlEndpoint ;
+	core:location "http://escience.rpi.edu:8890/sparql"^^xsd:anyURI ;
+	core:defaultGraph "http://escience.rpi.edu/ontology/BCO-DMO/bcodmo/3/0/"^^xsd:anyURI ;
+	core:hasSparqlType core:VirtuosoSparql .
+
+:FacetCollection a facet:FacetCollection ;
+	facet:faceturi :DatasetsFacet, :ProgramsFacet, :ProjectsFacet, :DeploymentsFacet, :PeopleFacet, 
+		       :AwardsFacet, :PlatformsFacet , :InstCatsFacet, :InstrumentsFacet, :ParametersFacet .
+
+:DatasetsFacet a facet:FirstOrderFacet ;
+	facet:class bcodmo:DeploymentDataset ;
+	facet:label "Datasets"^^xsd:string ;
+	#foe:sparqlSelectVariable "?DeploymentID"^^xsd:string ;
+	#foe:sparqlSelectVariable "?link"^^xsd:string ;
+	#foe:contextpredicate :DeploymentContextPred ;
+	#foe:contextpredicate :DataLinkContextPred ;
+	facet:type facet:TypeObject .
+
+:DataLinkContextPred a facet:Predicate ;
+	facet:predicate bcodmo:hasDatasetURL ;
+	#foe:sparqlBinding "link"^^xsd:string ;
+	facet:reverse "true"^^xsd:boolean .
+
+:DeploymentContextPred2 a facet:Predicate ;
+	facet:predicate bcodmo:fromDeployment ;
+	#foe:sparqlBinding "deployment"^^xsd:string ;
+	facet:reverse "true"^^xsd:boolean .
+
+:DeploymentContextPred a facet:Predicate ;
+	facet:predicate rdfs:label ;	  
+	#foe:sparqlBinding "DeploymentID"^^xsd:string ;
+	facet:nextpredicate :DeploymentContextPred2 ;
+	facet:reverse "true"^^xsd:boolean .
+	
+:RdfsLabelPredicate a facet:Predicate ;
+	facet:predicate rdfs:label .
+	
+:FoafNamePredicate a facet:Predicate ;
+	facet:predicate foaf:name .
+
+:PrimaryKeyPredicate a facet:Predicate ;
+	facet:predicate dc:identifier ;
+	#foe:sparqlBinding "pkid"^^xsd:string ;
+	facet:reverse "true"^^xsd:string .
+
+:ProgramsFacet a facet:ConnectedFacet ;
+	facet:class bcodmo:Program ;
+	facet:label "Programs"^^xsd:string ;
+	#foe:sparqlBinding "program"^^xsd:string ;
+	#foe:sparqlSelectVariable "fn:concat('http://osprey.bcodmo.org/program.cfm?flag=view&id=',?pkid) as ?context"^^xsd:string ;
+	#foe:sparqlAggregateVariable "pkid"^^xsd:string ;
+	#foe:contextpredicate :PrimaryKeyPredicate ;
+	facet:nextpredicate :ProgramsFacetPredicate1 ;
+	facet:labelpredicate :RdfsLabelPredicate ;
+	facet:type facet:TypeObject .
+
+:ProgramsFacetPredicate1 a facet:Predicate ;
+	facet:nextpredicate :ProgramsFacetPredicate2 ;
+	facet:predicate bcodmo:fromCollection .
+
+:ProgramsFacetPredicate2 a facet:Predicate ;
+	facet:predicate bcodmo:hasDataset ;
+	facet:reverse "true"^^xsd:boolean ;
+	#foe:sparqlBinding "collection"^^xsd:string ;
+	facet:nextpredicate :ProgramsFacetPredicate3 .
+
+:ProgramsFacetPredicate3 a facet:Predicate ;
+	facet:reverse "true"^^xsd:boolean ;
+	#foe:sparqlBinding "project"^^xsd:string ;
+	facet:predicate bcodmo:hasProject .
+
+:ProjectsFacet a facet:ConnectedFacet ;
+	facet:class bcodmo:Project ;
+	facet:label "Projects"^^xsd:string ;
+	facet:nextpredicate :ProjectsFacetPredicate1 ;
+	facet:labelpredicate :RdfsLabelPredicate ;
+	#foe:sparqlBinding "project"^^xsd:string ;
+	#foe:sparqlSelectVariable "fn:concat('http://osprey.bcodmo.org/project.cfm?flag=view&id=',?pkid) as ?context"^^xsd:string ;
+	#foe:sparqlAggregateVariable "pkid"^^xsd:string ;
+	#foe:contextpredicate :PrimaryKeyPredicate ;
+	facet:type facet:TypeObject .
+	
+:ProjectsFacetPredicate1 a facet:Predicate ;
+	facet:nextpredicate :ProjectsFacetPredicate2 ;
+	facet:predicate bcodmo:fromCollection .
+
+:ProjectsFacetPredicate2 a facet:Predicate ;
+	facet:predicate bcodmo:hasDataset ;
+	#foe:sparqlBinding "collection"^^xsd:string ;
+	facet:reverse "true"^^xsd:boolean .
+
+:DeploymentsFacet a facet:ConnectedFacet ;
+	facet:class bcodmo:Deployment ;
+	facet:label "Deployments"^^xsd:string ;
+	facet:nextpredicate :DeploymentsFacetPredicate ;
+	facet:labelpredicate :RdfsLabelPredicate ;
+	#foe:sparqlBinding "deployment"^^xsd:string ;
+	#foe:sparqlSelectVariable "fn:concat('http://osprey.bcodmo.org/deployment.cfm?flag=view&id=',?pkid) as ?context"^^xsd:string ;
+	#foe:sparqlAggregateVariable "pkid"^^xsd:string ;
+	#foe:contextpredicate :PrimaryKeyPredicate ;
+	facet:type facet:TypeObject .
+	
+:DeploymentsFacetPredicate a facet:Predicate ;
+	facet:predicate bcodmo:fromDeployment .
+
+:PeopleFacet a facet:ConnectedFacet ;
+	facet:class foaf:Person ;
+	#foe:filter :PeopleFilter ;
+	facet:label "People"^^xsd:string ;
+	facet:labelpredicate :FoafNamePredicate ;
+	facet:nextpredicate :PeopleFacetPredicate1 ;
+	#foe:sparqlBinding "person"^^xsd:string ;
+	#foe:sparqlSelectVariable "fn:concat('http://osprey.bcodmo.org/people.cfm?flag=view&id=',?pkid) as ?context"^^xsd:string ;
+	#foe:sparqlAggregateVariable "pkid"^^xsd:string ;
+	#foe:contextpredicate :PrimaryKeyPredicate ;
+	facet:type facet:TypeObject .
+
+:PeopleFacetPredicate1 a facet:Predicate ;
+	facet:predicate bcodmo:hasAgentWithRole ;
+	facet:nextpredicate :PeopleFacetPredicate2 .
+
+:PeopleFacetPredicate2 a facet:Predicate ;
+	facet:predicate bcodmo:hasRole ;
+	#foe:sparqlBinding "role"^^xsd:string ;
+	facet:reverse "true"^^xsd:boolean .
+
+:PeopleFilter a foe:Filter ;
+	facet:nextpredicate :PeopleFilterPredicate1 ;
+	foe:filtervalue "?weight <= 10"^^xsd:string .
+
+:PeopleFilterPredicate1 a facet:Predicate ;
+	#foe:sparqlBinding "weight"^^xsd:string ;
+	facet:predicate bcodmo:hasRoleWeight ;
+	facet:reverse "true"^^xsd:boolean ;
+	facet:nextpredicate :PeopleFilterPredicate2 .
+
+:PeopleFilterPredicate2 a facet:Predicate ;
+	facet:predicate bcodmo:hasRole ;
+	#foe:sparqlBinding "role"^^xsd:string ;
+	facet:reverse "true"^^xsd:boolean .
+
+:AwardsFacet a facet:ConnectedFacet ;
+	facet:nextpredicate :AwardsFacetPredicate1 ;
+	facet:class bcodmo:Award ;
+	facet:label "Awards"^^xsd:string ;
+	facet:labelpredicate :AwardsFacetLabelPredicate ;
+	#foe:sparqlBinding "award"^^xsd:string ;
+	#foe:sparqlSelectVariable "fn:concat('http://osprey.bcodmo.org/award.cfm?flag=view&id=',?pkid) as ?context"^^xsd:string ;
+	#foe:sparqlAggregateVariable "pkid"^^xsd:string ;
+	#foe:contextpredicate :PrimaryKeyPredicate ;
+	facet:type facet:TypeObject .
+	
+:AwardsFacetLabelPredicate a facet:Predicate ;
+	facet:predicate bcodmo:hasAwardNumber .
+
+:AwardsFacetPredicate1 a facet:Predicate ;
+	facet:nextpredicate :AwardsFacetPredicate2 ;
+	facet:predicate bcodmo:fromCollection .
+	
+:AwardsFacetPredicate2 a facet:Predicate ;
+	#foe:sparqlBinding "collection"^^xsd:string ;
+	facet:predicate bcodmo:hasAward .
+	
+:PlatformsFacet a facet:ConnectedFacet ;
+	facet:class bcodmo:Platform ;
+	facet:label "Platforms"^^xsd:string ;
+	#foe:sparqlBinding "platform"^^xsd:string ;
+	facet:labelpredicate :RdfsLabelPredicate ;
+	facet:nextpredicate :PlatformsFacetPredicate1 ;
+	facet:type facet:TypeObject .
+	
+:PlatformsFacetPredicate1 a facet:Predicate ;
+	facet:nextpredicate :PlatformsFacetPredicate2 ;
+	facet:predicate bcodmo:fromDeployment .
+	
+:PlatformsFacetPredicate2 a facet:Predicate ;
+	#foe:sparqlBinding "deployment"^^xsd:string ;
+	facet:predicate bcodmo:ofPlatform .
+	
+:InstrumentsFacet a facet:ConnectedFacet ;
+	facet:class bcodmo:Instrument ;
+	facet:label "Instruments"^^xsd:string ;
+	facet:labelpredicate :RdfsLabelPredicate ;
+	facet:nextpredicate :InstrumentsFacetPredicate1 ;
+	#foe:sparqlBinding "instrument"^^xsd:string ;
+	#foe:sparqlSelectVariable "fn:concat('http://osprey.bcodmo.org/instrument.cfm?flag=view&id=',?pkid) as ?context"^^xsd:string ;
+	#foe:sparqlAggregateVariable "pkid"^^xsd:string ;
+	#foe:contextpredicate :PrimaryKeyPredicate ;
+	#foe:codependentfacet :InstCatsFacet ;
+	facet:type facet:TypeObject .
+	
+:InstrumentsFacetPredicate1 a facet:Predicate ;
+	facet:predicate bcodmo:fromCollection ;
+	facet:nextpredicate :InstrumentsFacetPredicate2 .
+
+:InstrumentsFacetPredicate2 a facet:Predicate ;
+	#foe:sparqlBinding "collection"^^xsd:string ;
+	facet:predicate bcodmo:fromInstrument .
+
+:InstCatsFacet a facet:ConnectedFacet ;
+	facet:class skos:Concept ;
+	facet:label "Instrument Categories"^^xsd:string ;
+	facet:labelpredicate :InstCatsLabelPredicate ;
+	facet:nextpredicate :InstCatsFacetPredicate1 ;
+	facet:nextpredicate :InstCatsParentFacetPredicate1 ;
+	#foe:sparqlBinding "instcat"^^xsd:string ;
+	#foe:sparqlSelectVariable "?parent"^^xsd:string ;
+	#foe:sparqlAggregateVariable "parent"^^xsd:string ;
+	#foe:contextpredicate :InstCatsFacetParent ;
+	#foe:codependentfacet :InstrumentsFacet ;
+	facet:type facet:TypeObject .
+
+:InstCatsFacetParent a facet:Predicate ;
+	#foe:sparqlBinding "parent"^^xsd:string ;
+	#foe:sparqlGraph <http://vocab.ndg.nerc.ac.uk/> ;
+	#foe:optional "true"^^xsd:boolean ;
+	facet:predicate skos:narrower .
+
+:InstCatsLabelPredicate a facet:Predicate ;
+	#foe:sparqlGraph <http://vocab.ndg.nerc.ac.uk/> ;
+	facet:predicate skos:prefLabel .
+
+:InstCatsFacetPredicate1 a facet:Predicate ;
+	facet:predicate bcodmo:fromCollection ;
+	facet:nextpredicate :InstCatsFacetPredicate2 .
+
+:InstCatsFacetPredicate2 a facet:Predicate ;
+	facet:predicate bcodmo:fromInstrument ;
+	#foe:sparqlBinding "collection"^^xsd:string ;
+	facet:nextpredicate :InstCatsFacetPredicate3 .
+
+:InstCatsFacetPredicate3 a facet:Predicate ;
+	#foe:sparqlBinding "instrument"^^xsd:string ;
+	facet:predicate rdf:type .
+
+:InstCatsParentFacetPredicate1 a facet:Predicate ;
+	facet:predicate bcodmo:fromCollection ;
+	facet:nextpredicate :InstCatsParentFacetPredicate2 .
+
+:InstCatsParentFacetPredicate2 a facet:Predicate ;
+	facet:predicate bcodmo:fromInstrument ;
+	#foe:sparqlBinding "collection"^^xsd:string ;
+	facet:nextpredicate :InstCatsParentFacetPredicate3 .
+
+:InstCatsParentFacetPredicate3 a facet:Predicate ;
+	#foe:sparqlBinding "instrument"^^xsd:string ;
+	facet:predicate rdf:type ;
+	facet:nextpredicate :InstCatsParentFacetPredicate4 .
+
+:InstCatsParentFacetPredicate4 a facet:Predicate ;
+	#foe:sparqlBinding "subId"^^xsd:string ;
+	facet:predicate skos:narrower ;
+	#foe:transitive "true"^^xsd:boolean ;
+	#foe:sparqlGraph <http://vocab.ndg.nerc.ac.uk/> ;
+	facet:reverse "true"^^xsd:boolean .
+
+:ParametersFacet a facet:ConnectedFacet ;
+	facet:class bcodmo:Parameter ;
+	facet:label "Parameters"^^xsd:string ;
+	facet:labelpredicate :RdfsLabelPredicate ;
+	facet:nextpredicate :ParametersFacetPredicate1 ;
+	#foe:sparqlBinding "parameter"^^xsd:string ;
+	#foe:sparqlSelectVariable "fn:concat('http://osprey.bcodmo.org/parameter.cfm?flag=view&id=',?pkid) as ?context"^^xsd:string ;
+	#foe:sparqlAggregateVariable "pkid"^^xsd:string ;
+	#foe:contextpredicate :PrimaryKeyPredicate ;
+	facet:type facet:TypeObject .
+	
+:ParametersFacetPredicate1 a facet:Predicate ;
+	facet:nextpredicate :ParametersFacetPredicate2 ;
+	facet:predicate bcodmo:fromCollection .
+	
+:ParametersFacetPredicate2 a facet:Predicate ;
+	#foe:sparqlBinding "collection"^^xsd:string ;
+	facet:predicate bcodmo:hasParameter .

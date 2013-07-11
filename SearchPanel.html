@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<title>Welcome to S2S!</title>
+		<link rel="stylesheet" href="http://lod.bco-dmo.org/s2s/4.0/css/smoothness/jquery-ui-1.10.0.custom.css" type="text/css">
+		<style type="text/css">
+		  .ui-menu-item {
+		    width:350px;
+		    font: 11px/15px arial,tahoma,helvetica,sans-serif;
+		  }
+		  #s2s-facet-panel {
+		    width:350px;
+		    font: 11px/15px arial,tahoma,helvetica,sans-serif;
+		    vertical-align:top;
+		  }
+		  option {
+		    font: 11px/15px arial,tahoma,helvetica,sans-serif;
+		  }
+		</style>
+
+		<!-- JavaScript Libraries -->
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/lib/jquery-1.9.1.min.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/lib/jquery-ui-1.10.0.custom.min.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/lib/jquery.multi-open-accordion-1.5.3.custom.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/lib/json-serialization.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/lib/load.js" type="text/javascript"></script>
+
+		<!-- S2S Core JavaScript -->
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/core/s2s-utils.js" type="text/javascript"></script> <!-- Always load first -->
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/core/s2s-config.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/core/FacetPanel.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/core/HookPanel.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/core/WidgetPanel.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/core/Input.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/core/Interface.js" type="text/javascript"></script>
+		<script src="http://lod.bco-dmo.org/s2s/4.0/scripts/core/SearchService.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		  (function(s2s,$) {
+		    $(document).ready(function() {
+		      var config = {
+		        'paradigm' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/HierarchicalSearch',
+		        'inputs' : [
+		          {'name' : 'http://a9.com/-/opensearch/extensions/geo/1.0/box', 'ignore' : true, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/OpenLayersBoundingBox'},
+		          {'name' : 'http://a9.com/-/opensearch/extensions/time/1.0/start', 'ignore' : true, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/DateWidget'},
+		          {'name' : 'http://a9.com/-/opensearch/extensions/time/1.0/end', 'ignore' : true, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/DateWidget'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#Programs', 'enabled' : true, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/ContextSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#Projects', 'enabled' : true, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/ContextSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#People', 'enabled' : true, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/ContextSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#Deployments', 'enabled' : false, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/ContextSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#InstrumentCategories', 'enabled' : false, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/HierarchyFacetedSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#Instruments', 'enabled' : false, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/ContextSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#ParameterCategories', 'enabled' : false, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/HierarchyFacetedSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#Parameters', 'enabled' : false, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/ContextSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#Awards', 'enabled' : false, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/AlphaFacetedSelect'},
+		          {'name' : 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#Platforms', 'enabled' : false, 'widget' : 'http://escience.rpi.edu/ontology/sesf/s2s-core/4/0/UnsortedFacetedSelect'},
+		          {'name' : 'http://a9.com/-/spec/opensearch/1.1/count', 'ignore' : true},
+		          {'name' : 'http://a9.com/-/spec/opensearch/1.1/startIndex', 'ignore' : true}
+			]
+		      };
+		      var service = new s2s.SearchService('http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#SearchService',config);
+		      var intrfc = 'http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#BcoDmoMapperQuery';
+		      //console.log(parent);
+		      var callback = function(response) { data = JSON.parse(response); parent.mapSearchResults(data); }
+		      //var callback = function(response) { data = JSON.parse(response); }
+		      var hook = new s2s.utils.HookPanel(intrfc, callback);
+		      service.addPanel(hook);
+		      hook.update({}); //do initial update with no s2s:Input constraints
+		    });
+		  })(edu.rpi.tw.sesf.s2s,jQuery);
+		</script>
+	</head>
+	<body>
+		<table name="http://lod.bco-dmo.org/s2s/opensearch/s2s.ttl#SearchService">
+			<tbody>
+				<tr>
+					<td id="s2s-facet-panel"></td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+</html>
