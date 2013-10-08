@@ -119,6 +119,11 @@ function getQueryHeader($type) {
 	$header .= getPrefixes();
 	$header .= 'SELECT DISTINCT ';
 	switch ($type) {
+                case "programs":
+                case "projects":
+                    $header .= '(fn:concat(?title_label," (",?acronym,")") as ?label) ?id (count(DISTINCT ?dataset) AS ?count)';
+                    //$header .= '?label ?id (count(DISTINCT ?dataset) AS ?count)';
+                    break;
 		case "datasets":
 		    $header .= '?dcname ?dcid ?pid ?pname ?dcurl ?depname ?depid ?dsid ?dsurl';
 			break;
@@ -216,14 +221,16 @@ function getQuerySelectBody($type) {
 		case 'projects':
 			$body .= ' ?project bcodmo:hasDataset ?collection . ' .
 			      	'?dataset bcodmo:fromCollection ?collection . ' .
-				'?project rdfs:label ?label . ' .
+				'?project rdfs:label ?title_label . ' .
+                                '?project bcodmo:hasAcronym ?acronym . ' .
 				'?project dcterms:identifier ?id . ';
 			break;
 		case 'programs':
 			$body .= ' ?project bcodmo:hasDataset ?collection . ' .
 			        '?dataset bcodmo:fromCollection ?collection . ' .
 				'?program bcodmo:hasProject ?project . ' .
-				'?program rdfs:label ?label . ' .
+				'?program rdfs:label ?title_label . ' .
+                                '?program bcodmo:hasAcronym ?acronym . ' .
 				'?program dcterms:identifier ?id . ';
 			break;
 		case 'awards':
@@ -297,6 +304,8 @@ function getQueryFooter($type = null, $limit = null, $offset = 0, $sort = null) 
 	} else if ($type == 'platforms') {
 	   	$footer .= " GROUP BY ?id ?base_label ?title_label";
 	        $footer .= " ORDER BY ?title_label ?base_label";
+        } else if ($type == 'programs' || $type == 'projects'){
+                $footer .= " GROUP BY ?title_label ?acronym ?id";
 	} else if ($type != 'mapper') {
 	        $footer .= " GROUP BY ?label ?id";
 	}
