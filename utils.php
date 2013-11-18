@@ -362,7 +362,9 @@ function programConstraint($progs) {
 function deploymentConstraint($deps) {
 	$arr = array();
 	for ($i = 0; $i < count($deps); ++$i) {
-		array_push($arr,'{ ?deployment a bcodmo:Deployment . ?deployment dcterms:identifier "' . $deps[$i] . '"^^xsd:int . }');
+	  // don't constrain to Deployment as the type may be Cruise 
+	  // something like FILTER (?type = bcodmo:Deployment || ?type = bcdmo:Cruise) may work
+		array_push($arr,'{ ?deployment dcterms:identifier "' . $deps[$i] . '"^^xsd:int . }');
 	}
 	return implode(' UNION ',$arr) . ' ?dataset bcodmo:fromDeployment ?deployment . ?dataset bcodmo:fromCollection ?collection . ';
 }
