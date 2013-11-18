@@ -5,7 +5,7 @@
 ///
 
 //namespaces
-$bcodmo = "http://escience.rpi.edu/ontology/BCO-DMO/bcodmo/3/0/";
+$bcodmo = "http://ocean-data.org/schema/";
 $rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 $foaf = "http://xmlns.com/foaf/0.1/";
 $time = "http://www.w3.org/2006/time#";
@@ -18,7 +18,7 @@ $dcterms = "http://purl.org/dc/terms/";
 $endpoint = "http://lod.bco-dmo.org/sparql/";
 $param = "query";
 $graphParam = "default-graph-uri";
-$graph = "http://escience.rpi.edu/ontology/BCO-DMO/bcodmo/3/0/";
+$graph = "http://www.bco-dmo.org/";
 $seavoxGraph = "http://vocab.ndg.nerc.ac.uk/";
 ///
 /// Utility Functions
@@ -119,11 +119,10 @@ function getQueryHeader($type) {
 	$header .= getPrefixes();
 	$header .= 'SELECT DISTINCT ';
 	switch ($type) {
-                case "programs":
-                case "projects":
-                    $header .= '(fn:concat(?title_label," (",?acronym,")") as ?label) ?id (count(DISTINCT ?dataset) AS ?count)';
-                    //$header .= '?label ?id (count(DISTINCT ?dataset) AS ?count)';
-                    break;
+    case "programs":
+    case "projects":
+      $header .= '(fn:concat(?title_label," (",?acronym,")") as ?label) ?id (count(DISTINCT ?dataset) AS ?count)';
+      break;
 		case "datasets":
 		    $header .= '?dcname ?dcid ?pid ?pname ?dcurl ?depname ?depid ?dsid ?dsurl';
 			break;
@@ -219,10 +218,11 @@ function getQuerySelectBody($type) {
 				'?person dcterms:identifier ?id . ';
 			break;
 		case 'projects':
-			$body .= ' ?project bcodmo:hasDataset ?collection . ' .
+			$body .= '?project rdf:type bcodmo:Project . ' .
+			         '?project bcodmo:hasDataset ?collection . ' .
 			      	'?dataset bcodmo:fromCollection ?collection . ' .
 				'?project rdfs:label ?title_label . ' .
-                                '?project bcodmo:hasAcronym ?acronym . ' .
+        '?project bcodmo:hasAcronym ?acronym . ' .
 				'?project dcterms:identifier ?id . ';
 			break;
 		case 'programs':
@@ -230,7 +230,7 @@ function getQuerySelectBody($type) {
 			        '?dataset bcodmo:fromCollection ?collection . ' .
 				'?program bcodmo:hasProject ?project . ' .
 				'?program rdfs:label ?title_label . ' .
-                                '?program bcodmo:hasAcronym ?acronym . ' .
+        '?program bcodmo:hasAcronym ?acronym . ' .
 				'?program dcterms:identifier ?id . ';
 			break;
 		case 'awards':
@@ -250,7 +250,7 @@ function getQuerySelectBody($type) {
 			        '?dataset bcodmo:fromDeployment ?deployment . ' .
 				'?deployment bcodmo:ofPlatform ?platform . ' .
 				'?platform rdfs:label ?base_label . ' .
-				'?platform bcodmo:hasPlatformTitle ?title_label . ' .
+				'?platform bcodmo:hasPlatformTitle [ skos:prefLabel ?title_label ] . ' .
 				'?platform dcterms:identifier ?id . ';
 			break;
 		case 'datasets':
@@ -300,14 +300,14 @@ function getQueryFooter($type = null, $limit = null, $offset = 0, $sort = null) 
 			$footer .= " ORDER BY " . implode(' ', $sortLabels);
 		}
 	} else if ($type == 'instcats' || $type == 'paramcats') {
-	       	$footer .= " GROUP BY ?label ?id ?parent";
+	    $footer .= " GROUP BY ?label ?id ?parent";
 	} else if ($type == 'platforms') {
 	   	$footer .= " GROUP BY ?id ?base_label ?title_label";
-	        $footer .= " ORDER BY ?title_label ?base_label";
-        } else if ($type == 'programs' || $type == 'projects'){
-                $footer .= " GROUP BY ?title_label ?acronym ?id";
+	    $footer .= " ORDER BY ?title_label ?base_label";
+  } else if ($type == 'programs' || $type == 'projects'){
+      $footer .= " GROUP BY ?title_label ?acronym ?id";
 	} else if ($type != 'mapper') {
-	        $footer .= " GROUP BY ?label ?id";
+	    $footer .= " GROUP BY ?label ?id";
 	}
 	return $footer;
 }
@@ -410,7 +410,6 @@ function getResponse($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs,
 	$results = sparqlSelect($query);
 	if ($type == "datasets" || $type == "dataTable")
 		$count = getDatasetCount($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms);
-  error_log($query);
 	getOutput($results,$type,$limit,$offset,$count);
 }
 
