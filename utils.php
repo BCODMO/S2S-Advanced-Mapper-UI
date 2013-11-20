@@ -209,14 +209,17 @@ function getQuerySelectBody($type) {
 				'?deployment dcterms:identifier ?id . ';
 			break;
 		case 'people':
-			$body .= ' ?dataset rdf:type ?type . ' .
-                                'FILTER (?type = bcodmo:DeploymentDatasetCollection || ?type = bcodmo:DeploymentDataset)' .
-			      	'?dataset bcodmo:hasAgentWithRole ?role . ' .
-				'?person bcodmo:hasRole ?role . ' .
+			$body .= '?person bcodmo:hasRole ?role . ' .
 				'?role bcodmo:hasRoleWeight ?weight . ' .
 				'FILTER( ?weight <= 10 ) ' .
 				'?person rdfs:label ?label . ' .
-				'?person dcterms:identifier ?id . ';
+				'?person dcterms:identifier ?id . ' .
+				'{ ?collection bcodmo:hasAgentWithRole ?role . ' .
+          '?dataset bcodmo:fromCollection ?collection . ' .
+        '} UNION { ' .
+          '?dataset bcodmo:hasAgentWithRole ?role . ' .
+          '?dataset bcodmo:fromCollection ?collection . ' .
+        '}';
 			break;
 		case 'projects':
 			$body .= '?project rdf:type bcodmo:Project . ' .
@@ -341,7 +344,13 @@ function personConstraint($ppl) {
 	for ($i = 0; $i < count($ppl); ++$i) {
 		array_push($arr,'{ ?person a foaf:Person . ?person dcterms:identifier "' . $ppl[$i] . '"^^xsd:int . }');
 	}
-	return implode(' UNION ',$arr) . ' ?person bcodmo:hasRole ?role . ?role bcodmo:hasRoleWeight ?weight . FILTER ( ?weight <= 10 ) ?dataset bcodmo:hasAgentWithRole ?role . ?dataset bcodmo:fromCollection ?collection . ';
+	return implode(' UNION ',$arr) . ' ?person bcodmo:hasRole ?role . ?role bcodmo:hasRoleWeight ?weight . FILTER ( ?weight <= 10 ) ' . 
+	      '{ ?collection bcodmo:hasAgentWithRole ?role . ' .
+          '?dataset bcodmo:fromCollection ?collection . ' .
+        '} UNION { ' .
+          '?dataset bcodmo:hasAgentWithRole ?role . ' .
+          '?dataset bcodmo:fromCollection ?collection . ' .
+        '}';
 }
 
 function projectConstraint($prjs) {
