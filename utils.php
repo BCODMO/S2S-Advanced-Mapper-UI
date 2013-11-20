@@ -209,7 +209,8 @@ function getQuerySelectBody($type) {
 				'?deployment dcterms:identifier ?id . ';
 			break;
 		case 'people':
-			$body .= ' ?dataset bcodmo:fromCollection ?collection . ' .
+			$body .= ' ?dataset rdf:type ?type . ' .
+                                'FILTER (?type = bcodmo:DeploymentDatasetCollection || ?type = bcodmo:DeploymentDataset)' .
 			      	'?dataset bcodmo:hasAgentWithRole ?role . ' .
 				'?person bcodmo:hasRole ?role . ' .
 				'?role bcodmo:hasRoleWeight ?weight . ' .
@@ -431,22 +432,22 @@ function getDatasetCount($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $pr
 }
 
 function addContextLinks(&$results, $type) {
-	 $osprey = "http://osprey.bcodmo.org/";
+	 $osprey = "http://www.bco-dmo.org/";
 	 $base = null;
 	 if ($type == 'instruments') {
-	    	    $base = $osprey . "instrument.cfm?flag=view&id=";
+	    	    $base = $osprey . "instrument/";
 	 } else if ($type == 'parameters') {
-	   	    $base = $osprey . "parameter.cfm?flag=view&id=";
+	   	    $base = $osprey . "parameter/";
 	 } else if ($type == 'projects') {
-	   	    $base = $osprey . "project.cfm?flag=view&id=";
+	   	    $base = $osprey . "project/";
 	 } else if ($type == 'programs') {
-	   	    $base = $osprey . "program.cfm?flag=view&id=";
+	   	    $base = $osprey . "program/";
 	 } else if ($type == 'people') {
-	   	    $base = $osprey . "people.cfm?flag=view&id=";
+	   	    $base = $osprey . "person/";
 	 } else if ($type == 'awards') {
-	   	    $base = $osprey . "award.cfm?flag=view&id=";
+	   	    $base = $osprey . "award/";
 	 } else if ($type == 'deployments') {
-	   	    $base = $osprey . "deployment.cfm?flag=view&id=";
+	   	    $base = $osprey . "deployment/";
 	 }
 	 if ( $base != null ) {
 	      	    foreach ( $results as $i => $info ) {
