@@ -179,13 +179,21 @@ function getQuerySelectBody($type) {
 				'{ ?instrument a ?id . ' .
 				'GRAPH <' . $seavoxGraph . '> { ' .
 				'?id skos:prefLabel ?label . ' .
-				'OPTIONAL { ?parent skos:narrower ?id . } ' .
+				' FILTER(LANGMATCHES(LANG(?label), "en")) ' .
+				'OPTIONAL { ?parent skos:narrower ?id . 
+          ?scheme skos:member ?parent .
+          FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/L05/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/L22/current/>)
+        } ' .
 				'} } UNION { ' .
 				'?instrument a ?subInstCat . ' .
 				'GRAPH <' . $seavoxGraph . '> { ' .
 				' ?id skos:narrower ?subInstCat OPTION(transitive) . ' .
 				' ?id skos:prefLabel ?label . ' .
-				'OPTIONAL { ?parent skos:narrower ?id . } ' .
+				' FILTER(LANGMATCHES(LANG(?label), "en")) ' .
+				'OPTIONAL { ?parent skos:narrower ?id . 
+          ?scheme skos:member ?parent .
+          FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/L05/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/L22/current/>)
+        }  ' .
 				'} } ';
 			break;
 		case 'paramcats':
@@ -194,12 +202,18 @@ function getQuerySelectBody($type) {
 				'{ ?parameter a ?id . ' .
 				'GRAPH <' . $seavoxGraph .'> { ' .
 				'?id skos:prefLabel ?label . ' .
-				' OPTIONAL { ?parent skos:narrower ?id . } ' .
+				' OPTIONAL { ?parent skos:narrower ?id . 
+				    ?scheme skos:member ?parent .
+             FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/P01/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/P02/current/>  || ?scheme = <http://vocab.nerc.ac.uk/collection/P03/current/>) } ' .
+				' FILTER(LANGMATCHES(LANG(?label), "en")) ' .
 				'} } UNION { ?parameter a ?paramcat . ' .
 				'GRAPH <' . $seavoxGraph . '> { ' .
 				' ?id skos:narrower ?paramcat . ' .
 				' ?id skos:prefLabel ?label . ' .
-				' OPTIONAL { ?parent skos:narrower ?id . } ' . 
+				' FILTER(LANGMATCHES(LANG(?label), "en")) ' .
+				' OPTIONAL { ?parent skos:narrower ?id .
+				    ?scheme skos:member ?parent .
+             FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/P01/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/P02/current/>  || ?scheme = <http://vocab.nerc.ac.uk/collection/P03/current/>) } ' . 
 				'} }';
 			break;
 		case 'deployments':
