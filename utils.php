@@ -163,7 +163,7 @@ function getQueryConstraintBody($box, $begin, $end, $insts, $instcats, $ppl, $pr
 	return $body;
 }
 
-function getQuerySelectBody($type) {
+function getQuerySelectBody($type, $query = '') {
 	global $seavoxGraph;
 	$body = '';
 	switch ($type) {
@@ -221,6 +221,12 @@ function getQuerySelectBody($type) {
 			        '?dataset bcodmo:fromDeployment ?deployment . ' .
 				'?deployment rdfs:label ?label . ' .
 				'?deployment dcterms:identifier ?id . ';
+				
+				$role_q = 'UNION { ?dataset bcodmo:hasAgentWithRole ?role . ?dataset bcodmo:fromCollection ?collection . }';
+				if( $query && substr($query, -strlen($role_q)) === $role_q){
+				  //ends with dataset, dataset-deployment role check
+				  $body = 'UNION { ?deployment bcodmo:hasAgentWithRole ?role }' . $body;
+				}
 			break;
 		case 'people':
 			$body .= '?person bcodmo:hasRole ?role . ' .
@@ -234,6 +240,11 @@ function getQuerySelectBody($type) {
           '?dataset bcodmo:hasAgentWithRole ?role . ' .
           '?dataset bcodmo:fromCollection ?collection . ' .
         '}';
+        if( $query && strpos($query, '?deployment') !== FALSE){
+         $body .= 'UNION { ' .
+           '?deployment bcodmo:hasAgentWithRole ?role . ' .
+          '}';
+        }
 			break;
 		case 'projects':
 			$body .= '?project rdf:type bcodmo:Project . ' .
@@ -265,7 +276,7 @@ function getQuerySelectBody($type) {
 			break;
 		case 'platforms':
 			$body .= ' ?dataset bcodmo:fromCollection ?collection . ' .
-			        '?dataset bcodmo:fromDeployment ?deployment . ' .
+			  '?dataset bcodmo:fromDeployment ?deployment . ' .
 				'?deployment bcodmo:ofPlatform ?platform . ' .
 				'?platform rdfs:label ?base_label . ' .
 				'?platform bcodmo:hasPlatformTitle [ skos:prefLabel ?title_label ] . ' .
@@ -415,7 +426,7 @@ function parameterCategoryConstraint($seavox) {
 function platformConstraint($platforms) {
 	$arr = array();
 	for ($i = 0; $i < count($platforms); ++$i) {
-		array_push($arr,'{ ?platform dcterms:identifier "' . $platforms[$i] . '"^^xsd:int . }');
+		array_push($arr,'{ ?platform dcterms:identifier "' . $platforms[$i] . '"^^xsd:string . }');
 	}
 	return implode(' UNION ',$arr) . ' ?deployment bcodmo:ofPlatform ?platform . ?dataset bcodmo:fromDeployment ?deployment . ?dataset bcodmo:fromCollection ?collection . ';
 }
@@ -433,6 +444,7 @@ function geoboxConstraint($box) {
 function getResponse($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms, $type, $limit = null, $offset = 0, $sort = null) {
 	$query = buildQuery($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms, $type, $limit, $offset, $sort);
 //	if ($type == "paramcats") echo $query;
+  error_log($query);
 	$results = sparqlSelect($query);
 	if ($type == "datasets" || $type == "dataTable")
 		$count = getDatasetCount($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms);
@@ -482,7 +494,7 @@ function addContextLinks(&$results, $type) {
 function buildQuery($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms, $type, $limit = null, $offset = 0, $sort = null) {
 	$query = getQueryHeader($type);
 	$query .= getQueryConstraintBody($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms);
-	$query .= getQuerySelectBody($type);
+	$query .= getQuerySelectBody($type, $query);
 	$query .= getQueryFooter($type, $limit, $offset, $sort);
 	//echo $query;
 	return $query;
