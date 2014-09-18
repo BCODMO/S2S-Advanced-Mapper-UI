@@ -72,7 +72,7 @@ function getDeployments($box) {
 	 $query = "PREFIX bcodmo: <$bcodmo> " .
 	 	"PREFIX rdfs: <$rdfs> " .
 		"SELECT DISTINCT ?name ?id WHERE { " .
-		"?d a bcodmo:Deployment . " .
+		"?d a ?type . FILTER(?type IN (bcodmo:Deployment, bcodmo:Cruise)) . " .
 		"?d rdfs:label ?name . " . 
 		"?d dcterms:identifier ?id }";
 	$results = sparqlSelect($query);
@@ -180,20 +180,20 @@ function getQuerySelectBody($type, $query = '') {
 				'GRAPH <' . $seavoxGraph . '> { ' .
 				'?id skos:prefLabel ?label . ' .
 				' FILTER(LANGMATCHES(LANG(?label), "en")) ' .
-				'OPTIONAL { ?parent skos:narrower ?id . 
-          ?scheme skos:member ?parent .
-          FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/L05/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/L22/current/>)
-        } ' .
+				'OPTIONAL { ?parent skos:narrower ?id . ' .
+         '?scheme skos:member ?parent ' .
+          'FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/L05/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/L22/current/>) ' .
+        '} ' .
 				'} } UNION { ' .
 				'?instrument a ?subInstCat . ' .
 				'GRAPH <' . $seavoxGraph . '> { ' .
 				' ?id skos:narrower ?subInstCat OPTION(transitive) . ' .
 				' ?id skos:prefLabel ?label . ' .
 				' FILTER(LANGMATCHES(LANG(?label), "en")) ' .
-				'OPTIONAL { ?parent skos:narrower ?id . 
-          ?scheme skos:member ?parent .
-          FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/L05/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/L22/current/>)
-        }  ' .
+				'OPTIONAL { ?parent skos:narrower ?id . ' .
+        '?scheme skos:member ?parent . ' .
+        'FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/L05/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/L22/current/>) ' .
+        '}  ' .
 				'} } ';
 			break;
 		case 'paramcats':
@@ -202,18 +202,18 @@ function getQuerySelectBody($type, $query = '') {
 				'{ ?parameter a ?id . ' .
 				'GRAPH <' . $seavoxGraph .'> { ' .
 				'?id skos:prefLabel ?label . ' .
-				' OPTIONAL { ?parent skos:narrower ?id . 
-				    ?scheme skos:member ?parent .
-             FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/P01/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/P02/current/>  || ?scheme = <http://vocab.nerc.ac.uk/collection/P03/current/>) } ' .
+				' OPTIONAL { ?parent skos:narrower ?id . ' .
+				    '?scheme skos:member ?parent . ' . 
+             'FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/P01/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/P02/current/>  || ?scheme = <http://vocab.nerc.ac.uk/collection/P03/current/>) } ' .
 				' FILTER(LANGMATCHES(LANG(?label), "en")) ' .
 				'} } UNION { ?parameter a ?paramcat . ' .
 				'GRAPH <' . $seavoxGraph . '> { ' .
 				' ?id skos:narrower ?paramcat . ' .
 				' ?id skos:prefLabel ?label . ' .
 				' FILTER(LANGMATCHES(LANG(?label), "en")) ' .
-				' OPTIONAL { ?parent skos:narrower ?id .
-				    ?scheme skos:member ?parent .
-             FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/P01/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/P02/current/>  || ?scheme = <http://vocab.nerc.ac.uk/collection/P03/current/>) } ' . 
+				' OPTIONAL { ?parent skos:narrower ?id . ' .
+				    '?scheme skos:member ?parent . ' .
+             'FILTER (?scheme = <http://vocab.nerc.ac.uk/collection/P01/current/> || ?scheme = <http://vocab.nerc.ac.uk/collection/P02/current/>  || ?scheme = <http://vocab.nerc.ac.uk/collection/P03/current/>) } ' . 
 				'} }';
 			break;
 		case 'deployments':
@@ -444,7 +444,7 @@ function geoboxConstraint($box) {
 function getResponse($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms, $type, $limit = null, $offset = 0, $sort = null) {
 	$query = buildQuery($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms, $type, $limit, $offset, $sort);
 //	if ($type == "paramcats") echo $query;
-  error_log($query);
+  error_log(preg_replace('/(\n|\t)+/', ' ', $query));
 	$results = sparqlSelect($query);
 	if ($type == "datasets" || $type == "dataTable")
 		$count = getDatasetCount($box, $begin, $end, $insts, $instcats, $ppl, $prjs, $progs, $deps, $awards, $params, $paramcats, $platforms);
